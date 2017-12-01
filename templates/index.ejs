@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
+    <style>
+        body {
+            margin: 0px;/*This removes the border around the canvas that Phaser adds, making the game actually take up all the available space*/
+            background: #151515;
+            color: #d0d0d0;
+            font-family: sans-serif;
+        }
+        #console {
+            margin: 32px;
+        }
+        .tools {
+            margin: 32px;
+        }
+        #cycles {
+            margin-left: 32px;
+            font-family: sans-serif;
+            font-size: 16px;
+            color: #dd8877;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id='console'></div>
+    <div id='cycles'>Cycles: 0</div>
+    <div class='tools'>
+        <div class='bitmap-encoder'>
+            <input type="file" id="bitmap-encoder-file" accept='.png, .jpg, .jpeg'>
+            <br>
+            <img id='bitmap-encoder-image' width='160' height='96'></img>
+            <textarea id='bitmap-encoder-text' rows='6' cols='80'></textarea>
+        </div>
+        <div class='memory-debugger'>
+            <style>
+                .mem-tab {
+                    border: 1px solid blue;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                    white-space: nowrap;
+                    width: 90%;
+                    font-family: sans-serif;
+                }
+                .mem-tab th {
+                    border: 1px solid blue;
+                    width: 32px;
+                    text-align: right;
+                    background: #373737;
+                    color: #f8f8bb;
+                    padding: 6px;
+                    font-size: 12px;
+                }
+                .mem-tab td {
+                    border: 1px solid blue;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-align: right;
+                    background: #37476f;
+                    color: #bbd0f8;
+                    padding: 6px;
+                }
+                th.current {
+                    background: #573737;
+                }
+                td.current {
+                    background: #6f4737;
+                }
+            </style>
+            <button id='gridUpdate' type='button'>Refresh tables</button>
+            <div id='registergrid'></div>
+            <br>
+            <label for='displayMethod'>Display memory as:</label>
+            <select name='displayMethod'>
+                <option value='0'>Byte</option>
+                <option value='1'>Hex</option>
+                <option value='2'>Code</option>
+            </select>
+            <div id='programgrid'></div>
+            <br>
+            <label for='startAddress'>Memory view start address:</label>
+            <input type='number' name='startAddress' min='0' max='38855' value='32768'>
+            <label for='presetAddresses'>Presets:</label>
+            <select name='presetAddresses'>
+                <option value='32768'>VRAM</option>
+                <option value='38544'>Display</option>
+                <option value='38856'>Keyboard</option>
+            </select>
+            <div id='usergrid'></div>
+        </div>
+        <div class='compiler'>
+            <style>
+                .scrollbox {
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                    border: 4px solid black;
+                    background: #404040;
+                    color: #151515;
+                    caret-color: blue;
+                    width: 40%;
+                    height: 400px;
+                    display: inline-block;
+                    padding: 6px;
+                    margin-right: 32px;
+                }
+                .code-editor {
+                    display: inline-block;
+                    min-width: 100%;
+                    min-height: 100%;
+                    font-size: 16px;
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                }
+                .code-output {
+                    display: inline-block;
+                    min-width: 100%;
+                    min-height: 100%;
+                    font-size: 16px;
+                    color: #151530;
+                    overflow-wrap: break-word;
+                    word-wrap: break-word;
+                }
+                [contenteditable]:focus {
+                    outline: 0px solid transparent;
+                }
+            </style>
+            <script type='text/javascript'>
+                document.execCommand("DefaultParagraphSeparator", false, "div");
+            </script>
+            <label for='code-presets'>Examples:</label>
+            <select id='code-presets' name='code-presets'></select>
+            <br>
+            <div class='scrollbox'>
+                <code class='code-editor' contenteditable='true' spellcheck='false'>
+                    <div>// Program by @user</div>
+                    <div>// Type program below this comment...</div>
+                    <div>add8 $r0 $r1 $r2</div>
+                </code>
+            </div>
+            <div class='scrollbox'>
+                <code class='code-output'>
+                    <div>// Output of compiled program</div>
+                </code>
+            </div>
+            <br>
+            <button id='compile-button'>Compile</button>
+            <button id='execute-button'>Execute Program</button>
+        </div>
+    </div>
+</body>
+</html>
